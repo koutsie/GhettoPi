@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.CRITICAL)
 
 client = discord.Client()
 
+@client.event
 async def on_ready():
     print("v1.03")
     print("Logged in as")
