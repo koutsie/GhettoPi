@@ -11,7 +11,7 @@ A bot for something.
 ______
 - [x] Speedtest, uptime and kernel version.
 - [ ] Server stats
-- [ ] **Webpage (Being worked on...)**
+- [x] Webpage 
 - [ ] Getting a better OrangePi to host this?
 
 Current command list:
