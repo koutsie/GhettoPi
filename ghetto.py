@@ -24,6 +24,7 @@ async def on_ready():
         await asyncio.sleep(30)
         uptime = subprocess.getoutput("""uptime -p""")
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name= uptime))
+        await asyncio.sleep(30)
         release = subprocess.getoutput("""uname -r""")
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" version: " + release))
         await asyncio.sleep(30)
