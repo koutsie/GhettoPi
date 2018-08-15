@@ -5,93 +5,75 @@ A bot for something.
 
 ```python
 import discord
+from discord.ext import commands
 import asyncio
-import os
 import subprocess
+import os
 import json
 import traceback
-import subprocess
-from discord.ext import commands
-import logging
+from discord.utils import find
 
-logging.basicConfig(level=logging.CRITICAL)
-#from botconf import Conf
 
+bot = commands.Bot(command_prefix='.',pm_help = False)
 client = discord.Client()
 
+@bot.event
 async def on_ready():
-    print("v1.03")
-    print("Logged in as")
-    print(client.user.name)
-    print(client.user.id)
-    print("Logged into", len(client.servers), "servers")
+    print("v1.04")
+    print("Logged in as GhettoPi")
     while True:
-        servers = str(len(client.servers))
-        users = str(len(set(client.get_all_members())))
-        await client.change_presence(game=discord.Game(name=' Bootup: See logs!', type=1, url='https://twitch.tv/koutsie'))
-        await asyncio.sleep(20)
-        await client.change_presence(game=discord.Game(name='over ' + servers + ' shards...', type=2, url='https://opi,koutsie.eu/'))
-        await asyncio.sleep(20)
-        await client.change_presence(game=discord.Game(name='the ' + users + ' users', type=2, url='https://opi,koutsie.eu/'))
-        await asyncio.sleep(20)
-        await client.change_presence(game=discord.Game(name='logs...', type=2, url='https://opi,koutsie.eu/'))
+        cpu = subprocess.getoutput("""/home/koutsie/Statbot/temp.sh""")
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=' cpu: ' + cpu))
         await asyncio.sleep(30)
-        await client.change_presence(game=discord.Game(name=' https://opi.koutsie.eu/', type=2, url='https://https://opi,koutsie.eu/'))
-        await asyncio.sleep(20)
+        mem = subprocess.getoutput("""free -m  | grep ^Mem | tr -s ' ' | cut -d ' ' -f 3""")
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=' used ram: ' + mem + "mb / 400mb"))
+        await asyncio.sleep(30)
+        uptime = subprocess.getoutput("""uptime -p""")
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name= uptime))
+        release = subprocess.getoutput("""uname -r""")
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" version: " + release))
+        await asyncio.sleep(30)
 
-@client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('.neo'):
-        msg = await client.send_message(message.channel, 'Please wait (Stage 1/3 - Running ./neo.sh)')
-        subprocess.getoutput("./neo.sh")
-        await client.edit_message(msg, 'Please wait (Stage 2/3 - Copiling output)')
-        await asyncio.sleep(1.5)
-        await client.edit_message(msg, 'Please wait (Stage 3/3 - Uploading...)')
-        await asyncio.sleep(1)
-        link = open('link.link').read().splitlines()
-        await client.edit_message(msg, link)
-        await asyncio.sleep(5)
-        subprocess.getoutput("> link.link")
-        return
+        if message.author.bot:
+                return
+        elif message.content == "<@478195294631231488>":
+                await message.channel.send("Yes im alive!")
 
-@client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('.help'):
-        await client.send_message(message.channel, """```
-+------------------------------------------------------------------------+
-|             _____  _            _    _          _____  _               |
-|             / ____++ +          + +  + +        +  __ \(_)             |
-|            + +  __ | +__    ___ | +_ | +_  ___  | +__) +_              |
-|            | | +_ ++ '_ \  / _ \| __++ __+/ _ \ |  ___/| +             |
-|            + +__+ || + + ++  __/+ +_ + +_| (_) ++ +    | |             |
-|             \_____++_+ +_+ \___+ \__+ \__+\___/ +_+    +_+             |
-|                                                                        |
-+------------------------------------------------------------------------+
-|                                                                        |
-| .help - Shows this help menu                                           |
-|                                                                        |
-| .neo - Fetches system info                                             |
-|                                                                        |
-| .speedtest - Runs a speedtest                                          |
-|                                                                        |
-|                                                                        |
-|                                                                   1.03 |
-+------------------------------------------------------------------------+
-```""")
-        return
+        if message.author.bot:
+                return
+        elif message.content == ".uptime":
+                uptime = subprocess.getoutput("""uptime -p""")
+                await message.channel.send(uptime)
 
-@client.event
+
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('.speedtest'):
-        msg = await client.send_message(message.channel, 'Running: `speedtest-cli`')
-        speed = subprocess.getoutput("speedtest-cli --simple")
-        await client.edit_message(msg, '```' + speed + '```')
+        if message.author.bot:
+                return
+        elif message.content == ".speedtest":
+            speedtest = subprocess.getoutput("""speedtest-cli --simple""")
+            await message.channel.send(speedtest)
+            await asyncio.sleep(1200)
 
+@bot.event
+async def on_message(message):
+        if message.author.bot:
+                return
+        elif message.content == ".kernel":
+                release = subprocess.getoutput("""uname -r""")
+                await message.channel.send(release)
+                
+@bot.event
+async def on_message(message):
+        if message.author.bot:
+                return
+        elif message.content == ".help":
+                helps = "https://opi.koutsie.eu/"
+                await message.channel.send(helps)
 
-client.run('')
+bot.run('')
+
