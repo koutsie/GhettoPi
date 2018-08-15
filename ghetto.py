@@ -8,8 +8,18 @@ import traceback
 from discord.utils import find
 
 
-bot = commands.Bot(command_prefix='.',pm_help = False)
-client = discord.Client()
+
+def get_prefix(bot, message):
+    prefixes = ['.']
+    return commands.when_mentioned_or(*prefixes)(bot, message)
+
+cog = ['cogs.cpu', 'cogs.help', 'cogs.kernal', 'cogs.speedtest', 'cogs.uptime']
+
+bot = commands.Bot(command_prefix=get_prefix, description='A bot for something.')
+
+if __name__ == '__main__':
+    for extension in cog:
+        bot.load_extension(extension)
 
 @bot.event
 async def on_ready():
@@ -29,45 +39,4 @@ async def on_ready():
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" version: " + release))
         await asyncio.sleep(30)
 
-@bot.event
-async def on_message(message):
-        if message.author.bot:
-                return
-        elif message.content == "<@478195294631231488>":
-                await message.channel.send("Yes im alive!")
-
-@bot.event
-async def on_message(message):
-        if message.author.bot:
-                return
-        elif message.content == ".uptime":
-                uptime = subprocess.getoutput("""uptime -p""")
-                await message.channel.send(uptime)
-
-
-@bot.event
-async def on_message(message):
-        if message.author.bot:
-                return
-        elif message.content == ".speedtest":
-            speedtest = subprocess.getoutput("""speedtest-cli --simple""")
-            await message.channel.send(speedtest)
-            await asyncio.sleep(1200)
-
-@bot.event
-async def on_message(message):
-        if message.author.bot:
-                return
-        elif message.content == ".kernel":
-                release = subprocess.getoutput("""uname -r""")
-                await message.channel.send(release)
-                
-@bot.event
-async def on_message(message):
-        if message.author.bot:
-                return
-        elif message.content == ".help":
-                helps = "https://opi.koutsie.eu/"
-                await message.channel.send(helps)
-
-bot.run('')
+bot.run('', bot=True, reconnect=True)
