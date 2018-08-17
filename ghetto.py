@@ -11,10 +11,10 @@ from discord.utils import find
 
 
 def get_prefix(bot, message):
-    prefixes = ['.']
+    prefixes = ['..']
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
-cog = ['cogs.cpu', 'cogs.help', 'cogs.kernal', 'cogs.speedtest', 'cogs.uptime', 'cogs.stats', 'cogs.owner']
+cog = ['cogs.cpu', 'cogs.help', 'cogs.kernal', 'cogs.speedtest', 'cogs.uptime', 'cogs.stats', 'cogs.image', 'cogs.owner']
 
 bot = commands.Bot(command_prefix=get_prefix, description='A bot for something.')
 

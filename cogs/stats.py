@@ -4,7 +4,6 @@ import subprocess
 import asyncio
 import json
 import requests
-import simplegist
 import time
 from datetime import datetime
 
