@@ -4,10 +4,6 @@ import subprocess
 import asyncio
 import speedtest
 
-def speed():
-    results_dict = s.results.dict()
-    print(results_dict)
-
 class Speedtest:
     def __init__(self, bot):
         self.bot = bot
@@ -18,9 +14,9 @@ class Speedtest:
         s.download()
         s.upload()
         speed = s.results.share()
-        embed = discord.Embed(title='Speedtest', colour=0xFF5722)
+        embed = discord.Embed(colour=0xFF5722)
         embed.set_image(url=speed)
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/397570114997977098/479171018116562944/speedtest2048bot.png")
+        embed.set_author(name="Speedtest", icon_url="https://cdn.discordapp.com/attachments/397570114997977098/479171018116562944/speedtest2048bot.png")
         await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Speedtest(bot))
