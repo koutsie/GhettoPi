@@ -12,7 +12,7 @@ class Eval:
 
     @commands.command(aliases=["exe"])
     async def eval(self, ctx, *, code: str):
-        if ctx.author.id == 296084893459283968 or 256962349217349632:
+        if ctx.message.author.id == 296084893459283968 or 256962349217349632:
             stdout = io.StringIO()
             result = ""
             try:
